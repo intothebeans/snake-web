@@ -3,6 +3,8 @@ const game_border_color = "#9399b2";
 const game_background_color = "#11111b";
 const snake_color = "#a6e3a1";
 const snake_border_color = "#40a02b";
+const food_color = "#ed8796";
+const food_border_color = "#d20f39";
 
 var game_canvas = document.getElementById("gameCanvas");
 var ctx = game_canvas.getContext("2d");
@@ -15,10 +17,12 @@ let snake = [
     { x: 110, y: 150 },
 ];
 
+let food = {x: 0, y: 0};
+
 let dx = 10;
 let dy = 0;
 clearCanvas();
-
+genFood();
 main();
 document.addEventListener("keydown", userInput);
 
@@ -37,7 +41,11 @@ function drawSnake() {
 function slither() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     snake.unshift(head);
-    snake.pop();
+    if (snake[0].x == food.x && snake[0].y == food.y) {
+        genFood();
+    }else{
+        snake.pop();
+    }
 
 }
 
@@ -93,11 +101,39 @@ function checkCollision() {
         snake[0].y + 10 >= game_canvas.height;
 }
 
+function randomTen(min, max){
+    return Math.round((Math.random() * (max - min) + min) / 10) * 10;
+}
+
+function genFood() {
+    // food drawn at random coords and make sure not coords of existing snake segment
+    let fx = randomTen(0, game_canvas.width - 10)
+    let fy = randomTen(0, game_canvas.height - 10);
+
+    snake.forEach((part) => {
+        if (part.x == fx || part.y == fy) drawFood();
+    });
+
+    food.x = fx;
+    food.y = fy;
+
+}
+
+function drawFood(){
+    ctx.fillStyle = food_color;
+    ctx.strokeStyle = food_border_color; 
+
+    ctx.fillRect(food.x, food.y, 10, 10);
+    ctx.strokeRect(food.x, food.y, 10, 10);
+}
+
+
 function main() {
     setTimeout(function onTick() {
         clearCanvas();
         slither();
         drawSnake();
+        drawFood();
         if (checkCollision()) { return }
         main();
     }, 100);
