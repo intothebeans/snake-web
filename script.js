@@ -107,8 +107,8 @@ function checkCollision() {
         }
     }
     // border collision 
-    return snake[0].x <= 0 || snake[0].x + 10 >= game_canvas.width || snake[0].y <= 0 ||
-        snake[0].y + 10 >= game_canvas.height;
+    return snake[0].x < 0 || snake[0].x + 10 > game_canvas.width || snake[0].y < 0 ||
+        snake[0].y + 10 > game_canvas.height;
 }
 
 function randomTen(min, max){
@@ -147,7 +147,6 @@ function main() {
         drawFood();
         if (checkCollision()) { 
             game_button.setAttribute("value", "Reset");
-            changing_direction = true;
             snake = [
                 { x: 150, y: 150 },
                 { x: 140, y: 150 },
@@ -155,6 +154,8 @@ function main() {
                 { x: 120, y: 150 },
                 { x: 110, y: 150 },
             ];
+            dx = 10;
+            dy = 0;
             genFood();
             return; 
         }
