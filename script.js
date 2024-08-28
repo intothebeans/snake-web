@@ -24,6 +24,7 @@ let food = {x: 0, y: 0};
 
 let dx = 10;
 let dy = 0;
+let changing_direction = false;
 clearCanvas();
 drawSnake();
 genFood();
@@ -74,6 +75,10 @@ function userInput(event) {
     const down = dy === 10;
     const right = dx === 10;
     const left = dx === -10;
+
+    if (changing_direction) return;
+
+    changing_direction = true;
 
     if (key_pressed == LEFT_KEY && !right) {
         dx = -10;
@@ -135,12 +140,14 @@ function drawFood(){
 
 function main() {
     setTimeout(function onTick() {
+        changing_direction = false;
         clearCanvas();
         slither();
         drawSnake();
         drawFood();
         if (checkCollision()) { 
             game_button.setAttribute("value", "Reset");
+            changing_direction = true;
             snake = [
                 { x: 150, y: 150 },
                 { x: 140, y: 150 },
