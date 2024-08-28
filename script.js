@@ -6,8 +6,11 @@ const snake_border_color = "#40a02b";
 const food_color = "#ed8796";
 const food_border_color = "#d20f39";
 
+const game_button = document.getElementById("start");
+
 var game_canvas = document.getElementById("gameCanvas");
 var ctx = game_canvas.getContext("2d");
+var game_start = false;
 
 let snake = [
     { x: 150, y: 150 },
@@ -22,8 +25,10 @@ let food = {x: 0, y: 0};
 let dx = 10;
 let dy = 0;
 clearCanvas();
+drawSnake();
 genFood();
-main();
+drawFood();
+game_button.onclick = main;
 document.addEventListener("keydown", userInput);
 
 function drawSnakeSegment(snakeSegment) {
@@ -134,7 +139,18 @@ function main() {
         slither();
         drawSnake();
         drawFood();
-        if (checkCollision()) { return }
+        if (checkCollision()) { 
+            game_button.setAttribute("value", "Reset");
+            snake = [
+                { x: 150, y: 150 },
+                { x: 140, y: 150 },
+                { x: 130, y: 150 },
+                { x: 120, y: 150 },
+                { x: 110, y: 150 },
+            ];
+            genFood();
+            return; 
+        }
         main();
     }, 100);
 }
